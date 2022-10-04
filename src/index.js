@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const talkers = require('./talker.json');
-const fs = require('fs/promises')
+const checkTalkers = require('./utils/checkTalkers');
+const findTalker = require('./utils/findTalker');
 
 const app = express();
 app.use(bodyParser.json());
@@ -18,19 +18,16 @@ app.listen(PORT, () => {
   console.log('Online');
 });
 
-async function checkTalkers() {
-  try {
-  const fileContent = await fs.readFile('/app/src/talker.json')
-  if(!fileContent) {
-    return []
-  }
-  return JSON.parse(fileContent)
-} catch (e) {
-  console.error(e)
-}
-}
-
 app.get('/talker', async (_req, res) => {
   const allTalkers = await checkTalkers();
-  res.status(200).json(allTalkers)
+  res.status(200).json(allTalkers);
+});
+
+app.get('/talker/:id', async (req, res) => {
+  const { id } = req.params;
+  const talker = await findTalker(id);
+  if (talker === 'NOT FOUND') {
+    res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+  }
+  res.status(200).json(talker);
 });
