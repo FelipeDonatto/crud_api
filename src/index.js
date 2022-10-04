@@ -1,7 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const Crypto = require('crypto');
 const checkTalkers = require('./utils/checkTalkers');
 const findTalker = require('./utils/findTalker');
+const loginValidator = require('./utils/loginValidator');
 
 const app = express();
 app.use(bodyParser.json());
@@ -30,4 +32,17 @@ app.get('/talker/:id', async (req, res) => {
     res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
   }
   res.status(200).json(talker);
+});
+
+app.post('/login', async (req, res) => {
+  const { email, password } = req.body; 
+  const validate = await loginValidator(email, password);
+  if (validate !== '') {
+    return res.status(400).json({ message: validate });
+  }
+  res.status(200).json({
+    email,
+    password,
+    token: Crypto.randomBytes(64).toString('hex').slice(0, 16), 
+  });
 });
