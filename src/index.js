@@ -10,6 +10,7 @@ const verifyTalk = require('./utils/verifyTalk');
 const verifyAgeName = require('./utils/verifyAgeName');
 const verifyRate = require('./utils/verifyRate');
 const verifyWatch = require('./utils/verifyWatch');
+const editTalker = require('./utils/editTalker');
 
 const app = express();
 app.use(bodyParser.json());
@@ -68,4 +69,15 @@ app.post('/talker',
     talk,
   };
   await writeTalkers(newTalker, req, res, authorization);
+});
+
+app.put('/talker/:id',
+verifyToken,
+verifyTalk,
+verifyRate,
+verifyWatch,
+verifyAgeName,
+async (req, res) => {
+  const { id } = req.params;
+  editTalker(id, req.body, req, res);
 });

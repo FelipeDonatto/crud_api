@@ -1,7 +1,7 @@
 function verifyRate(req, res, next) {
     const { talk: { rate } } = req.body;
     const minRate = 1; const maxRate = 5;
-    if (!rate) {
+    if (rate === undefined) {
         return res.status(400).json({ message: 'O campo "rate" é obrigatório' });
         }
     if (rate < minRate || rate > maxRate) {
