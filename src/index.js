@@ -11,6 +11,7 @@ const verifyAgeName = require('./utils/verifyAgeName');
 const verifyRate = require('./utils/verifyRate');
 const verifyWatch = require('./utils/verifyWatch');
 const editTalker = require('./utils/editTalker');
+const deleteTalker = require('./utils/deleteTalker');
 
 const app = express();
 app.use(bodyParser.json());
@@ -80,4 +81,11 @@ verifyAgeName,
 async (req, res) => {
   const { id } = req.params;
   editTalker(id, req.body, req, res);
+});
+
+app.delete('/talker/:id',
+verifyToken,
+async (req, res) => {
+  const { id } = req.params;
+  deleteTalker(id, req, res);
 });
