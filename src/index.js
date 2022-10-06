@@ -37,20 +37,13 @@ app.get('/talker/:id', async (req, res) => {
   const { id } = req.params;
   const talker = await findTalker(id);
   if (talker === 'NOT FOUND') {
-    res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+   return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
   }
-  res.status(200).json(talker);
+  return res.status(200).json(talker);
 });
 
-app.post('/login', async (req, res) => {
-  const { email, password } = req.body; 
-  const validate = await loginValidator(email, password);
-  if (validate !== '') {
-    return res.status(400).json({ message: validate });
-  }
+app.post('/login', loginValidator, (req, res) => {
   res.status(200).json({
-    email,
-    password,
     token: Crypto.randomBytes(64).toString('hex').slice(0, 16), 
   });
 });
