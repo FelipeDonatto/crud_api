@@ -2,7 +2,7 @@ const fs = require('fs/promises');
 
 async function checkTalkers() {
     try {
-    const fileContent = await fs.readFile('/app/src/talker.json');
+    const fileContent = await fs.readFile('src/talker.json');
     if (!fileContent) {
       return [];
     }
